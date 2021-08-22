@@ -6,6 +6,6 @@ export class StreamItem implements IStreamItem {
 
   constructor(value: number) {
     this.value = value;
-    this.index = value * value - value
+    this.index = value * 5;
   }
 }

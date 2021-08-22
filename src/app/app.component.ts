@@ -8,25 +8,22 @@ import { StreamItem as Stream } from './models/StreamItem';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  arrStream: Stream[] = [];
+  arrPrime: Stream[] = [];
 
   ngOnInit(): void {
     const numbers$ = interval(500);
 
     const primeNumbers$ = numbers$.pipe(
-      this.filterNil(this.arrStream)
+      this.isPrime(this.arrPrime)
     );
 
     primeNumbers$.subscribe(x => {
       const item = new Stream(x);
-      this.arrStream.push(item);
-      console.log(item);
-
-      return console.log('Next prime pumber: ', x);
+      this.arrPrime.push(item);
     });
   }
 
-  filterNil(arrStream: Stream[]) {
+  isPrime(arrStream: Stream[]) {
     return function <T>(source: Observable<T>): Observable<T> {
       return new Observable(subscriber => {
         source.subscribe({
