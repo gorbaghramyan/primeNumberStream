@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   arrPrime: Stream[] = [];
 
   ngOnInit(): void {
-    const numbers$ = interval(500);
+    const numbers$ = interval(70);
 
     const primeNumbers$ = numbers$.pipe(
       this.isPrime(this.arrPrime)
