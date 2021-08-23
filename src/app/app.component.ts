@@ -8,10 +8,11 @@ import { StreamItem as Stream } from './models/StreamItem';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  arrPrime: Stream[] = [];
-  primeNumbers$: Subscription = new Subscription();
   isStarted: boolean = false;
   intervalInitialValue: number = 0;
+
+  primeNumbers$: Subscription = new Subscription();
+  arrPrime: Stream[] = [];
 
   startStream(): void {
     if (this.isStarted) {
@@ -22,15 +23,6 @@ export class AppComponent {
     this.isStarted = true;
     this.subscriber();
   };
-
-  subscriber(): void {
-    this.primeNumbers$ = interval(1)
-      .pipe(this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue)))
-      .subscribe(number => {
-        const item = new Stream(number);
-        this.arrPrime.push(item);
-      });
-  }
 
   pauseStream(): void {
     this.isStarted = false;
@@ -43,6 +35,17 @@ export class AppComponent {
     this.intervalInitialValue = 0;
     this.arrPrime = [];
     this.primeNumbers$.unsubscribe();
+  }
+
+  subscriber(): void {
+    this.primeNumbers$ = interval(1)
+      .pipe(
+        this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue))
+      )
+      .subscribe(number => {
+        const item = new Stream(number);
+        this.arrPrime.push(item);
+      });
   }
 
   isPrime(arrPrime: Stream[], startValue: Stream) {
@@ -83,9 +86,5 @@ export class AppComponent {
         return isPrime;
       }
     }
-  }
-
-  checkDisabled(): boolean {
-    return this.isStarted;
   }
 }
