@@ -1,4 +1,9 @@
 <div class="prime-wrapper">
     <h1>Discover all prime numbers</h1>
-    <p *ngFor="let item of arrPrime">value: {{item.value}}</p>
+    <button (click)="startStream()">Start stream</button>
+    <button (click)="stopStream()">Stop stream</button>
+    <br>
+    <div class="streamWrapper">
+        [ <p *ngFor="let item of arrPrime; let index = index">{{item.value}}, </p> ]
+    </div>
 </div>
