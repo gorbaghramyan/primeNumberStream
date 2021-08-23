@@ -1,9 +1,17 @@
 <div class="prime-wrapper">
-    <h1>Discover all prime numbers</h1>
-    <button (click)="startStream()">Start stream</button>
-    <button (click)="stopStream()">Stop stream</button>
-    <br>
+    <div class="navbar">
+        <h1>Discover all prime numbers</h1>
+        <button (click)="startStream()" *ngIf="!isStarted"><img src="./../assets/play.png" /></button>
+        <button (click)="startStream()" *ngIf="isStarted"><img src="./../assets/pause.png" /></button>
+        <button (click)="stopStream()"><img src="./../assets/reset.png" /></button>
+    </div>
     <div class="streamWrapper">
-        [ <p *ngFor="let item of arrPrime; let index = index">{{item.value}}, </p> ]
+        <h2>Discovered: {{arrPrime.length}}</h2>
+        <span>[
+            <p *ngFor="let item of arrPrime; let index = index">
+                {{item.value}}
+            </p>
+            ]
+        </span>
     </div>
 </div>

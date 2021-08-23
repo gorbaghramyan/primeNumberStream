@@ -10,28 +10,49 @@ import { StreamItem as Stream } from './models/StreamItem';
 export class AppComponent {
   arrPrime: Stream[] = [];
   primeNumbers$: Subscription = new Subscription();
+  isStarted: boolean = false;
+  intervalInitialValue: number = 0;
 
   startStream(): void {
-    if (this.arrPrime.length !== 0) {
-      this.arrPrime = []
+    if (this.isStarted) {
+      this.pauseStream();
+      return;
     }
+
+    this.isStarted = true;
+    this.subscriber();
+  };
+
+  subscriber(): void {
     this.primeNumbers$ = interval(1)
-      .pipe(this.isPrime(this.arrPrime))
+      .pipe(this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue)))
       .subscribe(number => {
         const item = new Stream(number);
         this.arrPrime.push(item);
       });
-  };
-
-  stopStream(): void {
-    this.primeNumbers$.unsubscribe()
   }
 
-  isPrime(arrPrime: Stream[]) {
-    return function <StreamItem>(source: Observable<StreamItem>): Observable<StreamItem> {
+  pauseStream(): void {
+    this.isStarted = false;
+    this.intervalInitialValue = this.arrPrime?.pop()?.value || 0;
+    this.primeNumbers$.unsubscribe();
+  }
+
+  stopStream(): void {
+    this.isStarted = false;
+    this.intervalInitialValue = 0;
+    this.arrPrime = [];
+    this.primeNumbers$.unsubscribe();
+  }
+
+  isPrime(arrPrime: Stream[], startValue: Stream) {
+    return function (source: Observable<number>): Observable<number> {
       return new Observable(observer => {
         source.subscribe({
           next(value) {
+            if (value < startValue.value) {
+              value += startValue.value;
+            }
             if (isPrime(Number(value), arrPrime)) {
               observer.next(value);
             }
@@ -62,5 +83,9 @@ export class AppComponent {
         return isPrime;
       }
     }
+  }
+
+  checkDisabled(): boolean {
+    return this.isStarted;
   }
 }
