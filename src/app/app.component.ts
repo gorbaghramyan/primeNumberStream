@@ -23,12 +23,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  isPrime(arrStream: Stream[]) {
+  isPrime(arrPrime: Stream[]) {
     return function <T>(source: Observable<T>): Observable<T> {
       return new Observable(subscriber => {
         source.subscribe({
           next(value) {
-            if (isPrime(Number(value), arrStream)) {
+            if (isPrime(Number(value), arrPrime)) {
               subscriber.next(value);
             }
           },
