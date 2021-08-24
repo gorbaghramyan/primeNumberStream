@@ -1,9 +1,9 @@
 <div class="prime-wrapper">
     <div class="navbar">
         <h1>Discover all prime numbers</h1>
-        <button (click)="startStream()" *ngIf="!isStarted"><img src="./../assets/play.png" /></button>
-        <button (click)="startStream()" *ngIf="isStarted"><img src="./../assets/pause.png" /></button>
-        <button (click)="stopStream()"><img src="./../assets/reset.png" /></button>
+        <button (click)="startStream()" *ngIf="!isStarted"><img alt='play' title='play' src="./../assets/play.png" /></button>
+        <button (click)="startStream()" *ngIf="isStarted"><img alt='pause' title='pause' src="./../assets/pause.png" /></button>
+        <button (click)="stopStream()"><img alt='stop' title='stop' src="./../assets/reset.png" /></button>
     </div>
     <div class="streamWrapper">
         <h2>Discovered: {{arrPrime.length}}</h2>
