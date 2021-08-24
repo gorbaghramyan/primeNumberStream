@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import { StreamItem as Stream } from './models/StreamItem';
 
@@ -14,12 +14,15 @@ export class AppComponent implements OnDestroy {
   primeNumbers$: Subscription = new Subscription();
   arrPrime: Stream[] = [];
 
+  constructor(private cd: ChangeDetectorRef) {
+
+  }
+
   startStream(): void {
     if (this.isStarted) {
       this.pauseStream();
       return;
     }
-
     this.isStarted = true;
     this.subscriber();
   };
@@ -40,7 +43,7 @@ export class AppComponent implements OnDestroy {
   subscriber(): void {
     this.primeNumbers$ = interval(1)
       .pipe(
-        this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue))
+        this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue), this.cd)
       )
       .subscribe(number => {
         const item = new Stream(number);
@@ -48,11 +51,12 @@ export class AppComponent implements OnDestroy {
       });
   }
 
-  isPrime(arrPrime: Stream[], startValue: Stream) {
+  isPrime(arrPrime: Stream[], startValue: Stream, cd:ChangeDetectorRef) {
     return function (source: Observable<number>): Observable<number> {
       return new Observable(observer => {
         source.subscribe({
           next(value) {
+    cd.detectChanges();
             if (value < startValue.value) {
               value += startValue.value;
             }
