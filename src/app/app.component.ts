@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { interval, Observable, Subscription } from 'rxjs';
 import { StreamItem as Stream } from './models/StreamItem';
 
@@ -7,7 +7,7 @@ import { StreamItem as Stream } from './models/StreamItem';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   isStarted: boolean = false;
   intervalInitialValue: number = 0;
 
@@ -86,5 +86,9 @@ export class AppComponent {
         return isPrime;
       }
     }
+  }
+
+  ngOnDestroy(): void{
+    this.primeNumbers$.unsubscribe();
   }
 }
