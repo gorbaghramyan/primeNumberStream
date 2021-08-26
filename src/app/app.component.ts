@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
-import { interval, Observable, Subscription } from 'rxjs';
+import { interval, Observable, OperatorFunction, Subscription } from 'rxjs';
 import { StreamItem as Stream } from './models/StreamItem';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnDestroy {
   isStarted: boolean = false;
@@ -14,9 +14,7 @@ export class AppComponent implements OnDestroy {
   primeNumbers$: Subscription = new Subscription();
   arrPrime: Stream[] = [];
 
-  constructor(private cd: ChangeDetectorRef) {
-
-  }
+  constructor(private cd: ChangeDetectorRef) {}
 
   startStream(): void {
     if (this.isStarted) {
@@ -25,7 +23,7 @@ export class AppComponent implements OnDestroy {
     }
     this.isStarted = true;
     this.subscriber();
-  };
+  }
 
   pauseStream(): void {
     this.isStarted = false;
@@ -43,20 +41,28 @@ export class AppComponent implements OnDestroy {
   subscriber(): void {
     this.primeNumbers$ = interval(1)
       .pipe(
-        this.isPrime(this.arrPrime, new Stream(this.intervalInitialValue), this.cd)
+        this.isPrime(
+          this.arrPrime,
+          new Stream(this.intervalInitialValue),
+          this.cd
+        )
       )
-      .subscribe(number => {
+      .subscribe((number) => {
         const item = new Stream(number);
         this.arrPrime.push(item);
       });
   }
 
-  isPrime(arrPrime: Stream[], startValue: Stream, cd:ChangeDetectorRef) {
+  isPrime<T, R>(
+    arrPrime: Stream[],
+    startValue: Stream,
+    cd: ChangeDetectorRef
+  ): OperatorFunction<number, number> {
     return function (source: Observable<number>): Observable<number> {
-      return new Observable(observer => {
+      return new Observable((observer) => {
         source.subscribe({
           next(value) {
-    cd.detectChanges();
+            cd.detectChanges();
             if (value < startValue.value) {
               value += startValue.value;
             }
@@ -69,7 +75,7 @@ export class AppComponent implements OnDestroy {
           },
           complete() {
             observer.complete();
-          }
+          },
         });
       });
 
@@ -81,7 +87,7 @@ export class AppComponent implements OnDestroy {
         }
 
         let isPrime = true;
-        arr.map(el => {
+        arr.map((el) => {
           if (value % el.value === 0) {
             isPrime = false;
           }
@@ -89,10 +95,10 @@ export class AppComponent implements OnDestroy {
 
         return isPrime;
       }
-    }
+    };
   }
 
-  ngOnDestroy(): void{
+  ngOnDestroy(): void {
     this.primeNumbers$.unsubscribe();
   }
 }
